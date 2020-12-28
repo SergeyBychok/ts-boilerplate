@@ -1,33 +1,30 @@
-const { resolve } = require('path')
 const webpack = require('webpack')
-const merge = require('webpack-merge')
+const { merge } = require('webpack-merge')
 const base = require('./webpack.config.base')
-const ProgressBarPlugin = require('progress-bar-webpack-plugin')
+const { resolve } = require('path')
 
 const development = merge(base, {
   mode: 'development',
-  entry: ['@babel/polyfill', 'webpack-hot-middleware/client', './src/index'],
-  resolve: {
-    alias: {
-      'react-dom': '@hot-loader/react-dom',
-    },
-  },
+  entry: ['@babel/polyfill', './src/index'],
+  devtool: 'inline-source-map',
   output: {
-    path: resolve(__dirname, '../server/'),
     filename: '[name].js',
-    publicPath: '/dist/',
+    publicPath: '/',
     chunkFilename: '[name].chunk.js',
   },
-  devtool: 'source-map',
   devServer: {
-    hot: true,
+    historyApiFallback: true,
     contentBase: resolve(__dirname, '../public'),
     publicPath: '/',
+    open: false,
+    compress: true,
+    hot: true,
+    port: 3000,
   },
   optimization: {
     noEmitOnErrors: true,
   },
-  plugins: [new webpack.HotModuleReplacementPlugin(), new webpack.NamedModulesPlugin(), new ProgressBarPlugin()],
+  plugins: [new webpack.HotModuleReplacementPlugin()],
 })
 
 module.exports = development

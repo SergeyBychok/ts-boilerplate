@@ -1,8 +1,7 @@
 import { ApolloClient, ApolloProvider } from '@apollo/client'
 import * as React from 'react'
-import { hot } from 'react-hot-loader/root'
 import { renderRoutes } from 'react-router-config'
-import { Router } from 'react-router'
+import { Router } from 'react-router-dom'
 import { History } from 'history'
 
 import routes from './routes'
@@ -25,4 +24,4 @@ function App({ history, apolloClient }: Props) {
   )
 }
 
-export default hot(App)
+export default App

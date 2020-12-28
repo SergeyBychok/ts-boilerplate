@@ -11,11 +11,15 @@ const routes: RouteConfig[] = [
     component: Root,
     routes: [
       {
-        path: '/login',
+        path: ['/login', '/register'],
         component: Entry,
         routes: [
           {
             path: '/login',
+            component: Login,
+          },
+          {
+            path: '/register',
             component: Login,
           },
         ],

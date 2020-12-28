@@ -1,13 +1,15 @@
-const webpack = require('webpack')
-const { resolve } = require('path')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const ESLintPlugin = require('eslint-webpack-plugin')
+const { resolve } = require('path')
 
-const isDev = process.env.NODE_ENV === 'development'
+const getClientEnvironment = require('./env')
+
+const env = getClientEnvironment()
 
 module.exports = {
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: ['.tsx', '.ts', '.js', '.jsx'],
     alias: {
       '@common': resolve(__dirname, '../src/components/common/'),
       '@assets': resolve(__dirname, '../src/assets/'),
@@ -19,21 +21,16 @@ module.exports = {
       '@hooks': resolve(__dirname, '../src/hooks/'),
     },
   },
+  output: {
+    path: resolve(__dirname, '../public'),
+    filename: '[name].bundle.js',
+    publicPath: '/',
+  },
   module: {
     rules: [
       {
         test: /\.(j|t)sx?$/,
-        enforce: 'pre',
-        loader: 'eslint-loader',
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.(j|t)sx?$/,
-        loader: 'babel-loader',
-        options: {
-          cacheDirectory: isDev,
-        },
-        exclude: /node_modules/,
+        use: ['babel-loader', 'eslint-loader'],
       },
       {
         test: /\.(png|jpg|gif)$/,
@@ -82,23 +79,21 @@ module.exports = {
     ],
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: isDev ? '"development"' : '"production"',
-      },
-    }),
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      hash: true,
+      title: 'National Missing and Unidentified Persons Kenya',
       template: resolve(__dirname, '../src/index.ejs'),
+      filename: resolve(
+        __dirname,
+        env.raw.NODE_ENV === 'development' ? '../public/index.html' : '../public/index.html'
+      ),
+      hash: true,
       templateParameters: {
-        title: 'projectName',
+        title: 'R5 Click',
       },
-      filename: resolve(__dirname, isDev ? '../server/index.html' : '../public/index.html'),
       chunks: ['main'],
       chunksSortMode: 'none',
     }),
-    new ForkTsCheckerWebpackPlugin({
-      async: isDev,
-    }),
+    new ESLintPlugin({ extensions: ['.tsx', '.ts', '.js', '.jsx'] }),
   ],
 }

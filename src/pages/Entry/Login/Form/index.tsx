@@ -1,4 +1,3 @@
-import localStorageService from '@utils/localStorage'
 import { isEmail, isRequired, minLength, validator } from '@utils/validators'
 import React from 'react'
 import FormView from './FormView'
@@ -20,8 +19,7 @@ function LoginForm() {
 
   function handleSubmit(values: Values) {
     console.log(values)
-    localStorageService.token = 'eyJleHAiOjE2MDQ5NTQy'
-    history.replace('/')
+    history.push('/register')
   }
   function validate(values: Values) {
     return validator<Values>(validSchema, values)
