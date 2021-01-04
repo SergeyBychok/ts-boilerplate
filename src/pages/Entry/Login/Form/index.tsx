@@ -19,7 +19,7 @@ function LoginForm() {
 
   function handleSubmit(values: Values) {
     console.log(values)
-    history.push('/register')
+    history.push('/')
   }
   function validate(values: Values) {
     return validator<Values>(validSchema, values)
